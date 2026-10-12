@@ -42,12 +42,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Docker from official repository
 RUN install -m 0755 -d /etc/apt/keyrings \
-    && curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc \
+    && curl -fsSL https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/debian/gpg -o /etc/apt/keyrings/docker.asc \
     && chmod a+r /etc/apt/keyrings/docker.asc \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian trixie stable" > /etc/apt/sources.list.d/docker.list \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/debian trixie stable" > /etc/apt/sources.list.d/docker.list \
     && apt-get update \
     && apt-get install -y --no-install-recommends docker-ce docker-ce-cli containerd.io \
     && rm -rf /var/lib/apt/lists/*
+
+# Configure skopeo registry mirrors (GFW workaround)
+RUN mkdir -p /etc/containers && \
+    printf '[[registry]]\nprefix = "docker.io"\nlocation = "docker.io"\n\n[[registry.mirror]]\nlocation = "dockerproxy.net"\n\n[[registry.mirror]]\nlocation = "docker.1ms.run"\n\n[[registry.mirror]]\nlocation = "docker.m.daocloud.io"\n\n[[registry.mirror]]\nlocation = "docker.nju.edu.cn"\n\n[[registry]]\nprefix = "ghcr.io"\nlocation = "ghcr.io"\n\n[[registry.mirror]]\nlocation = "ghcr.nju.edu.cn"\n\n[[registry.mirror]]\nlocation = "ghcr.m.daocloud.io"\n' \
+    > /etc/containers/registries.conf
 
 # Pre-fetch Docker-in-Docker image as OCI archive
 ARG DIND_IMAGE=docker:dind
