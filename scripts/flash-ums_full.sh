@@ -1,12 +1,12 @@
 #!/bin/bash
 # flash-ums.sh - Flash HA OS image via UMS (USB Mass Storage) mode through serial
 # Usage: ./flash-ums.sh [image_path]
-# Default image: output/images/haos_odroid-m1s-18.3.dev0.img.xz
+# Default image: output/haos_odroid-m1s-18.3-full.img.xz
 
 set -e
 SERIAL="/dev/ttyUSB0"
 BAUD=1500000
-IMAGE="${1:-output/haos_odroid-m1s-18.3.dev0-full.img.xz}"
+IMAGE="${1:-output/haos_odroid-m1s-18.3-full.img.xz}"
 RAW="/tmp/haos_flash_full.img"
 
 echo "=== Decompressing image ==="
@@ -86,6 +86,6 @@ ser.write(b'reset\n')
 ser.close()
 "
 
-sudo rm -rf /tmp/haos_flash.img 2>/dev/null
+sudo rm -rf "$RAW"
 
 echo "=== Done ==="

@@ -1,7 +1,6 @@
 #!/bin/bash
 # flash-ums.sh - Flash HA OS image via UMS (USB Mass Storage) mode through serial
 # Usage: ./flash-ums.sh [image_path]
-# Default image: output/images/haos_odroid-m1s-18.3.dev0.img.xz
 
 set -e
 SERIAL="/dev/ttyUSB0"
